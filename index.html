@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-sm-4">
             <p class="font-weight-bold">Step 1-Enter WOPD PUBLISHER ID</p>
-            <label> WOPDPUBID: <input type="number" size="3" maxlength="5" placeholder="000" name="WOPDPUBID" id="pubID"> </label> <br>
+            <label> WOPDPUBID: <input type="number" size="3" maxlength="5" placeholder="000" name="WOPDPUBID" id="pubID" onchange="clearError()"> </label> <br>
             <div>   
                 <br>
                 <form>
@@ -131,34 +131,45 @@
 
         var wopdpubidVal = document.getElementById('pubID').value;
         var value_output = document.getElementById("output").value; 
+        var selectedRadio =  $("input[type='radio'][name='special']:checked").length;
+        var selectedRadioVal =  $("input[type='radio'][name='special']:checked").val();
+        var stringAds = genericVal.join("\r\n");
+       
+        var resGen = addStr(stringAds, 15, wopdpubidVal);
+        console.log(selectedRadio);
 
 
-        if (wopdpubidVal !== "") {
-            var stringAds = genericVal.join("\r\n");
+        if (wopdpubidVal !== "" && selectedRadio > 0){
+            var finalOutput =  resGen +  "\r\n" + selectedRadioVal
+            console.log("I went  route 1");
+        }    
+        else if (wopdpubidVal !== "" && selectedRadio === 0 ){
+            var finalOutput =  resGen 
+            console.log("I went  route 2");
+        }
+        else {
+            var finalOutput =  "" ;
+           document.getElementById('error').style.display = "block";
+        }
 
-            var selectedRadio =  $("input[type='radio'][name='special']:checked").val();
+      
+        document.getElementById("output").innerHTML = finalOutput;       
 
-            var resGen = addStr(stringAds, 15, wopdpubidVal);
+        const ads_link = document.querySelector('a');
+        ads_link.style.display = "block";
+        ads_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalOutput));
+        ads_link.setAttribute('download', 'ads'+'.txt');
+        const app_link = document.getElementById("app");
+        app_link.style.display = "block";
+        app_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalOutput));
+        app_link.setAttribute('download', 'app-ads'+'.txt');
+
+   }
             
-            var finalOutput =  resGen + "\r\n" + selectedRadio;
-            document.getElementById("output").innerHTML = finalOutput;       
-
-            const ads_link = document.querySelector('a');
-            ads_link.style.display = "block";
-            ads_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalOutput));
-            ads_link.setAttribute('download', 'ads'+'.txt');
-            const app_link = document.getElementById("app");
-            app_link.style.display = "block";
-            app_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalOutput));
-            app_link.setAttribute('download', 'app-ads'+'.txt');
-        }else{
-
-            document.getElementById('error').style.display = "block";
-
-        }            
+    function clearError(){
+        document.getElementById('error').style.display = "none";
+        console.log("error should be gone");
     }
-
-
 
     function clearChecked() {
        location.reload()
