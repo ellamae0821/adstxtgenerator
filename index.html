@@ -16,28 +16,49 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-3">
-            <p class="font-weight-bold">Enter WOPD PUBLISHER ID</p>
+        <div class="col-sm-4">
+            <p class="font-weight-bold">Step 1-Enter WOPD PUBLISHER ID</p>
             <label> WOPDPUBID: <input type="number" size="3" maxlength="5" placeholder="000" name="WOPDPUBID" id="pubID"> </label> <br>
+            <div>   
+                <br>
+                <form>
+                    <p class="font-weight-bold">Step 2- Choose if applicable</p>
+                <!-- <textarea class="form-control" aria-label="With textarea" id="adswizzPrivate" rows="7"></textarea><br/> -->
+<!--                     <label><input type="radio" name="kjlh" id="generic"> adswizz.com, kjlh, RESELLER </label> <br>
+                    <label><input type="radio" name="wgn" id="generic"> adswizz.com, wgnradio, RESELLER</label> <br>
+                    <label><input type="radio" name="federated" id="generic"> adswizz.com, federatedmedia, RESELLER</label> <br>
+                    <label><input type="radio" name="sinclair" id="generic"> adswizz.com, sinclair, RESELLER</label> <br>
+                    <label><input type="radio" name="eldorado" id="generic"> adswizz.com, eldorado, RESELLER</label> <br>
+                    <label><input type="radio" name="redapplemedia" id="generic"> adswizz.com, redapplemedia, RESELLER</label> <br> -->
+
+                    <label><input type="radio" id="kjlh" name="special" value="adswizz.com, kjlh, RESELLER"> adswizz.com, kjlh, RESELLER </label> <br>
+                    <label><input type="radio" id="wgn" name="special" value="adswizz.com, wgnradio, RESELLER"> adswizz.com, wgnradio, RESELLER</label> <br>
+                    <label><input type="radio" id="federated" name="special" value="adswizz.com, federatedmedia, RESELLER"> adswizz.com, federatedmedia, RESELLER</label> <br>
+                    <label><input type="radio" id="sinclair" name="special" value="adswizz.com, sinclair, RESELLER"> adswizz.com, sinclair, RESELLER</label> <br>
+                    <label><input type="radio" id="eldorado" name="special" value="adswizz.com, eldorado, RESELLER"> adswizz.com, eldorado, RESELLER</label> <br>
+                    <label><input type="radio" id="redapplemedia" name="special" value="adswizz.com, redapplemedia, RESELLER"> adswizz.com, redapplemedia, RESELLER</label> <br>                </form>
+                
+            </div><br>
             <input class="btn btn-primary" type="submit" id="submit" onclick="generateGen()">
             <input class="btn btn-primary" type="submit" id="restart" value="Clear" onclick="clearChecked()"><br>
             <span style="display:none;color:red" id="error"> Please enter WOPD PUB ID! </span>
+            <p id="demo"></p>
+
         </div>
         <div class="col-sm-8">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Ads.txt &<br>App-ads.txt</span>
                 </div>
-                <textarea class="form-control" aria-label="With textarea" id="output" rows="20"></textarea><br/>
+               
+                <textarea class="form-control" aria-label="With textarea" id="output" rows="21" onchange="checkText()"></textarea><br/>
                 
             </div>
             <div>
-                <a style="display:none">Download Ads.txt</a>
+                <a id="ads" style="display:none">Download Ads.txt</a>
+                <a id="app" style="display:none">Download App-ads.txt</a> 
             </div>
-            <div>   
-                <p class="font-weight-bold">Adswizz (Publisher specific entries)</p>
-                <textarea class="form-control" aria-label="With textarea" id="adswizzPrivate" rows="7"></textarea><br/>
-            </div>
+
         </div>
     </div>
 </div>
@@ -45,6 +66,30 @@
 
 
 <script type="text/javascript">
+    
+    var wopdpubidVal = document.getElementById('pubID').value;
+    var outputAreaVal = document.getElementById("output").value;
+    
+
+
+
+    var outputArea = document.getElementById('output');
+
+
+    function checkText(){
+        var outputAreaVal = document.getElementById("output").value;
+        console.log(outputAreaVal);
+        document.getElementById("demo").innerHTML = outputAreaVal;
+        const ads_link = document.getElementById("ads");
+        ads_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(outputAreaVal));
+        ads_link.setAttribute('download', 'Ads'+'.txt');
+        const app_link = document.getElementById("app");
+        app_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(outputAreaVal));
+        app_link.setAttribute('download', 'app-ads'+'.txt');
+    }
+
+
+
     var adswizzVal =    [
                             "adswizz.com, kjlh, RESELLER",
                             "adswizz.com, wgnradio, RESELLER",
@@ -53,7 +98,7 @@
                             "adswizz.com, eldorado, RESELLER",
                             "adswizz.com, redapplemedia, RESELLER"
                         ];
-    document.getElementById("adswizzPrivate").value = adswizzVal.join("\n");
+    // document.getElementById("adswizzPrivate").value = adswizzVal.join("\n");
     var genericVal = [
                             "wideorbit.com, , DIRECT, 009ac71611fe32ff",
                             "rubiconproject.com, 21134, RESELLER, 0bfd66d529a55807",
@@ -85,19 +130,27 @@
     function generateGen(){
 
         var wopdpubidVal = document.getElementById('pubID').value;
- 
+        var value_output = document.getElementById("output").value; 
+
+
         if (wopdpubidVal !== "") {
             var stringAds = genericVal.join("\r\n");
+
+            var selectedRadio =  $("input[type='radio'][name='special']:checked").val();
+
             var resGen = addStr(stringAds, 15, wopdpubidVal);
-        
+            
+            var finalOutput =  resGen + "\r\n" + selectedRadio;
+            document.getElementById("output").innerHTML = finalOutput;       
 
-            var outputBox = document.getElementById("output").innerHTML = resGen;
-            var finalOutput = document.getElementById("output").value;
-
-            const link = document.querySelector('a');
-            link.style.display = "block";
-            link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalOutput));
-            link.setAttribute('download', 'Adstxt_'+wopdpubidVal +'.txt');
+            const ads_link = document.querySelector('a');
+            ads_link.style.display = "block";
+            ads_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalOutput));
+            ads_link.setAttribute('download', 'ads'+'.txt');
+            const app_link = document.getElementById("app");
+            app_link.style.display = "block";
+            app_link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalOutput));
+            app_link.setAttribute('download', 'app-ads'+'.txt');
         }else{
 
             document.getElementById('error').style.display = "block";
@@ -113,6 +166,8 @@
     }
 
 
+    
+    
 
 </script>
 </script>
