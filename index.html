@@ -100,7 +100,7 @@
                         ];
     // document.getElementById("adswizzPrivate").value = adswizzVal.join("\n");
     var genericVal = [
-                            "wideorbit.com, , DIRECT, 009ac71611fe32ff",
+                            "wideorbit.com, , DIRECT, 009ac71611fe32ff",                            
                             "rubiconproject.com, 21134, RESELLER, 0bfd66d529a55807",
                             "targetspot.com, 29, RESELLER, feb28ed826dcf532",
                             "rubiconproject.com, 16418, RESELLER, 0bfd66d529a55807",
@@ -122,6 +122,8 @@
                             "openx.com, 540298543, RESELLER, 6a698e2ec38604c6"
                     ];
 
+    var genericVal_2 = [ "adswizz.com, , RESELLER" ];
+
     function addStr(str, index, stringToAdd){
       return str.substring(0, index) + stringToAdd + str.substring(index, str.length);
     }
@@ -134,18 +136,26 @@
         var selectedRadio =  $("input[type='radio'][name='special']:checked").length;
         var selectedRadioVal =  $("input[type='radio'][name='special']:checked").val();
         var stringAds = genericVal.join("\r\n");
+        var stringAds2 = genericVal_2.join("\r\n");
+
        
         var resGen = addStr(stringAds, 15, wopdpubidVal);
-        console.log(selectedRadio);
+        var resGen2 = addStr(stringAds2, 13, wopdpubidVal);
+        var result_Generic = resGen +"\r\n"+ resGen2;
+
+        // console.log(selectedRadio);
+        // console.log(result_Generic);
+
+
 
 
         if (wopdpubidVal !== "" && selectedRadio > 0){
-            var finalOutput =  resGen +  "\r\n" + selectedRadioVal
-            console.log("I went  route 1");
+            var finalOutput =  resGen + "\r\n" + selectedRadioVal
+            // console.log("I went  route 1");
         }    
         else if (wopdpubidVal !== "" && selectedRadio === 0 ){
-            var finalOutput =  resGen 
-            console.log("I went  route 2");
+            var finalOutput =  result_Generic 
+            // console.log("I went  route 2");
         }
         else {
             var finalOutput =  "" ;
